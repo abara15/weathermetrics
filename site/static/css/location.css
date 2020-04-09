@@ -1,0 +1,146 @@
+@import url('https://fonts.googleapis.com/css?family=Prompt|Source+Sans+Pro&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
+
+/* START MAIN CONTENT */
+.top-container {
+    width: 80%;
+    margin: auto;
+    margin-bottom: 15px;
+    background: #27283c;
+    color: white;
+    text-align: center;
+    font-family: 'Cairo', sans-serif;
+}
+
+#locationName {
+    font-family: 'Cairo', sans-serif;
+    font-size: 70px;
+    font-weight: 100;
+}
+
+.top-container span {
+    vertical-align: middle;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.top-container button {
+    display: inline-block;
+    margin: 15px;
+}
+
+.top-container-table {
+    width: 70%;
+    padding: 30px;
+    margin: 0 auto;
+}
+
+.top-container-table .row {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.day-container,
+.hour-container {
+    width: 80%;
+    height: auto;
+    margin: auto;
+    margin-bottom: 15px;
+    background: #27283c;
+    color: white;
+    text-align: center;
+}
+
+.day-container .col-active,
+.hour-container .col-active {
+    border: solid #fff;
+    border-width: 3px;
+}
+
+.day-container .row,
+.hour-container .row {
+    padding: 30px;
+    height: 300px;
+}
+
+.day-container .row a,
+.hour-container .row a {
+    text-decoration: none;
+    color: white;
+}
+
+.day-container .col,
+.hour-container .col {
+    height: 100%;
+    margin-left: 10px;
+    margin-right: 10px;
+    width: fit-content;
+    display: inline-block;
+}
+
+.day-container .col span {
+    display: block;
+}
+
+.hour-container .col span {
+    display: block;
+    line-height: 70px;
+}
+
+.rowTitle {
+    font-family: 'Cairo', sans-serif;
+    font-size: x-large;
+}
+
+.row-active {
+    font-weight: 900;
+}
+
+.data-container {
+    width: 80%;
+    margin: auto;
+    margin-bottom: 15px;
+    background: #27283c;
+    color: white;
+    text-align: center;
+}
+
+.data-container .table-content {
+    padding: 1%;
+}
+
+.data-container .row {
+    padding-top: 30px;
+    padding-bottom: 30px;
+    line-height: 150%;
+}
+
+.data-container .row .col span {
+    display: block;
+}
+
+.data-container .data-title {
+    font-family: 'Cairo', sans-serif;
+    font-size: large;
+    font-weight: 900;
+}
+
+/* END MAIN CONTENT */
+
+.daily-mode-modal .modal-content,
+.hourly-mode-modal .modal-content,
+.longTerm-mode-modal .modal-content,
+.recommendations-mode-modal .modal-content {
+    background: #1f1e30;
+    color: white;
+}
+
+#modalLocationName {
+    font-family: 'Cairo', sans-serif;
+    font-size: 50px;
+    font-weight: 100;
+}
+
+.modal-body .accordion .card .card-body {
+    color: #111;
+}

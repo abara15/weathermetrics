@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css?family=Prompt|Source+Sans+Pro&display=swap');
+
+/* START MAIN CONTENT */
+.cities-container {
+    width: 75%;
+    margin: auto;
+}
+
+.major-city {
+    width: 30%;
+    margin: 17px;
+    float: left;
+    background-color: red;
+    align-items: center;
+    border: 3px solid #76787a;
+    border-radius: 20px;
+    background: #1e2028;
+}
+
+.major-city a {
+    text-decoration: none;
+}
+
+.major-city:hover {
+    opacity: 50%;
+    cursor: pointer;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently supported by Chrome, Opera and Firefox */
+}
+
+.major-city-text {
+    margin: 20px;
+    color: white;
+    line-height: normal;
+}
+
+.major-city-text  #city-name {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-style: italic;
+    font-weight: bold;
+    font-size: large;
+}
+
+.major-city-temp {
+    text-align: center;
+    line-height: 80%;
+}
+
+.major-city-min {
+    float: left;
+    font-family: 'Prompt', sans-serif;
+    font-size: small;
+    line-height: 80%;
+}
+
+.major-city-max {
+    float: right;
+    font-family: 'Prompt', sans-serif;
+    line-height: 80%;
+    font-size: small;
+}
+
+/* END MAIN CONTENT */

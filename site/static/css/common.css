@@ -1,0 +1,112 @@
+* {
+    scroll-behavior: smooth;
+}
+body {
+    background: #1f1e30;
+}
+
+.navbar {
+    width: 100%;
+    height: 90px;
+    background: #313155;
+    margin-bottom: 2%;
+}
+
+/* START MENU ICON */
+
+.menu-icon-change {
+    display: inline;
+    cursor: pointer;
+    margin: 15px 10px 30px 14px;
+    border: none;
+    background: none;
+}
+
+.menu-icon-change:hover .bar1,
+.menu-icon-change:hover .bar2,
+.menu-icon-change:hover .bar3 {
+    background-color: #5d606e;
+}
+
+.menu-icon-change:focus {outline: none;}
+
+.bar1, .bar2, .bar3 {
+    width: 35px;
+    height: 5px;
+    background-color: #fff;
+    border-radius: 5px;
+    margin: 6px 0;
+    transition: 0.4s;
+}
+
+.change .bar1 {
+    -webkit-transform: rotate(-45deg) translate(-9px, 6px);
+    transform: rotate(-45deg) translate(-9px, 6px);
+}
+
+.change .bar2 {opacity: 0;}
+
+.change .bar3 {
+    -webkit-transform: rotate(45deg) translate(-8px, -8px);
+    transform: rotate(45deg) translate(-8px, -8px);
+}
+
+/* END MENU ICON */
+
+#image, img {
+    background: url(img/logo-transparent.png);
+    width: 170px;
+    height: 74px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: auto;
+}
+
+/* START SIDE BAR */
+
+.sidebar {
+    height: 80%;
+    margin: 0px 10px 10px 27px;
+    border-radius: 15px;
+    width: 50px; /*50px*/
+    position: absolute;
+    z-index: 1;
+    background-image: linear-gradient(rgb(255, 0, 212), rgb(212, 0, 255));
+    overflow-x: hidden;
+    overflow-y: hidden;
+    padding-top: 16px;
+    transition: 0.08s ease-in-out;
+}
+
+#sidebar-line {
+    background-color: #fff;
+    height: 1px;
+    width: 75%;
+}
+
+.clock {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    color: #17D4FE;
+    font-size: 60px;
+    font-family: Orbitron;
+    letter-spacing: 7px;
+}
+
+.sidebar a {
+    text-decoration: none;
+    padding-top: 10px;
+    font-size: 20px;
+    color: #fff;
+    line-height: 180%;
+    text-align: center;
+    display: block;
+}
+
+.sidebar a:hover {
+    color: #111;
+}
+
+/* END SIDE BAR */
