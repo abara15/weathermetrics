@@ -97,7 +97,7 @@
                         <span class="rowTitle row-active">TODAY</span>
                         <span class="row-active">{{ daily["DailyForecasts"][0]["Date"][:5] }}</span>
                         <span class="row-active"><i class="fas {{ daily['DailyForecasts'][0]['Day']['Icon'] }} fa-5x"></i></span>
-                        <span class="row-active">{{ daily["DailyForecasts"][0]["Temperature"]["Maximum"]["Value"] }}°{{ daily["DailyForecasts"][0]["Temperature"]["Maximum"]["Unit"] }}</span>
+                        <span class="row-active">{{ daily["DailyForecasts"][0]["Temperature"]["Average"] }}°{{ daily["DailyForecasts"][0]["Temperature"]["Maximum"]["Unit"] }}</span>
                     </div>
                 </button>
                 <button type="button" class="btn" data-toggle="modal" data-target=".daily-mode-modal-1">
@@ -105,7 +105,7 @@
                         <span class="rowTitle">{{ daily["DailyForecasts"][1]["Weekday"] }}</span>
                         <span>{{ daily["DailyForecasts"][1]["Date"][:5] }}</span>
                         <span><i class="fas {{ daily['DailyForecasts'][1]['Day']['Icon'] }} fa-5x"></i></span>
-                        <span>{{ daily["DailyForecasts"][1]["Temperature"]["Maximum"]["Value"] }}°{{ daily["DailyForecasts"][1]["Temperature"]["Maximum"]["Unit"] }}</span>
+                        <span>{{ daily["DailyForecasts"][1]["Temperature"]["Average"] }}°{{ daily["DailyForecasts"][1]["Temperature"]["Maximum"]["Unit"] }}</span>
                     </div>
                 </button>
                 <button type="button" class="btn" data-toggle="modal" data-target=".daily-mode-modal-2">
@@ -113,7 +113,7 @@
                         <span class="rowTitle">{{ daily["DailyForecasts"][2]["Weekday"] }}</span>
                         <span>{{ daily["DailyForecasts"][2]["Date"][:5] }}</span>
                         <span><i class="fas {{ daily['DailyForecasts'][2]['Day']['Icon'] }} fa-5x"></i></span>
-                        <span>{{ daily["DailyForecasts"][2]["Temperature"]["Maximum"]["Value"] }}°{{ daily["DailyForecasts"][2]["Temperature"]["Maximum"]["Unit"] }}</span>
+                        <span>{{ daily["DailyForecasts"][2]["Temperature"]["Average"] }}°{{ daily["DailyForecasts"][2]["Temperature"]["Maximum"]["Unit"] }}</span>
                     </div>
                 </button>
                 <button type="button" class="btn" data-toggle="modal" data-target=".daily-mode-modal-3">
@@ -121,7 +121,7 @@
                         <span class="rowTitle">{{ daily["DailyForecasts"][3]["Weekday"] }}</span>
                         <span>{{ daily["DailyForecasts"][3]["Date"][:5] }}</span>
                         <span><i class="fas {{ daily['DailyForecasts'][3]['Day']['Icon'] }} fa-5x"></i></span>
-                        <span>{{ daily["DailyForecasts"][3]["Temperature"]["Maximum"]["Value"] }}°{{ daily["DailyForecasts"][3]["Temperature"]["Maximum"]["Unit"] }}</span>
+                        <span>{{ daily["DailyForecasts"][3]["Temperature"]["Average"] }}°{{ daily["DailyForecasts"][3]["Temperature"]["Maximum"]["Unit"] }}</span>
                     </div>
                 </button>
                 <button type="button" class="btn" data-toggle="modal" data-target=".daily-mode-modal-4">
@@ -129,7 +129,7 @@
                         <span class="rowTitle">{{ daily["DailyForecasts"][4]["Weekday"] }}</span>
                         <span>{{ daily["DailyForecasts"][4]["Date"][:5] }}</span>
                         <span><i class="fas {{ daily['DailyForecasts'][4]['Day']['Icon'] }} fa-5x"></i></span>
-                        <span>{{ daily["DailyForecasts"][4]["Temperature"]["Maximum"]["Value"] }}°{{ daily["DailyForecasts"][4]["Temperature"]["Maximum"]["Unit"] }}</span>
+                        <span>{{ daily["DailyForecasts"][4]["Temperature"]["Average"] }}°{{ daily["DailyForecasts"][4]["Temperature"]["Maximum"]["Unit"] }}</span>
                     </div>
                 </button>
             </div>

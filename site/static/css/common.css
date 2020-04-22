@@ -154,3 +154,7 @@ input[type=submit]:hover {
     border: solid 2px rgb(155, 155, 155);
     color: white;
 }
+
+.modal-body form input[type=submit]:hover {
+    background: #1f1e30;
+}
