@@ -38,26 +38,27 @@
     line-height: normal;
 }
 
-.major-city-text  #city-name {
+#city-name {
     font-family: 'Source Sans Pro', sans-serif;
-    font-style: italic;
+    font-weight: bolder;
+    font-size: xx-large;
+    text-transform: uppercase;
+}
+
+#city-temp {
+    font-family: 'Source Sans Pro', sans-serif;
     font-weight: bold;
-    font-size: large;
+    font-size: xx-large;
 }
 
-.major-city-temp {
-    text-align: center;
-    line-height: 80%;
-}
-
-.major-city-min {
+.major-city-info {
     float: left;
     font-family: 'Prompt', sans-serif;
     font-size: small;
-    line-height: 80%;
+    /* line-height: 80%; */
 }
 
-.major-city-max {
+.major-city-icon {
     float: right;
     font-family: 'Prompt', sans-serif;
     line-height: 80%;

@@ -16,6 +16,26 @@
     font-family: 'Cairo', sans-serif;
     font-size: 70px;
     font-weight: 100;
+    text-transform: uppercase;
+}
+
+#locationDate {
+    font-family: 'Cairo', sans-serif;
+    font-size: 30px;
+    font-weight: 100;
+    text-transform: uppercase;
+}
+
+.weather-icon-table .row {
+    margin: auto;
+    width: 40%;
+}
+
+.topTempTable {
+    line-height: 80px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 70px;
+    font-weight: 100;
 }
 
 .top-container span {
@@ -39,11 +59,34 @@
     margin-top: 10px;
     margin-bottom: 10px;
 }
+.top-container-table .row .col {
+    text-align: center;
+}
+
+.btn, .btn-active {
+    margin: auto;
+    background: transparent;
+    outline: none;
+}
+
+.btn:hover {
+    border: solid rgb(179, 179, 179);
+    background: #1f1e30;
+}
+.btn-active:hover {
+    background: transparent;
+    border-color: white;
+}
+
+.btn-active {
+    border: solid #fff;
+    border-width: 3px;
+}
 
 .day-container,
 .hour-container {
     width: 80%;
-    height: auto;
+    height: fit-content;
     margin: auto;
     margin-bottom: 15px;
     background: #27283c;
@@ -51,16 +94,11 @@
     text-align: center;
 }
 
-.day-container .col-active,
-.hour-container .col-active {
-    border: solid #fff;
-    border-width: 3px;
-}
-
 .day-container .row,
 .hour-container .row {
     padding: 30px;
     height: 300px;
+    width: 100%;
 }
 
 .day-container .row a,
@@ -69,22 +107,42 @@
     color: white;
 }
 
-.day-container .col,
+.day-container .btn {
+    height: 100%;
+    margin: auto;
+    width: fit-content;
+    display: inline-block;
+}
+.hour-container .btn {
+    height: 100%;
+    margin: auto 10px auto 10px;
+    width: fit-content;
+    display: inline-block;
+}
+
 .hour-container .col {
     height: 100%;
-    margin-left: 10px;
-    margin-right: 10px;
     width: fit-content;
     display: inline-block;
 }
 
 .day-container .col span {
     display: block;
+    line-height: 45px;
+    color: white;
 }
-
 .hour-container .col span {
     display: block;
     line-height: 70px;
+    color: white;
+}
+
+.btn:hover,
+.btn:active,
+.btn:focus,
+.bnt::selection {
+    border-width: 3px;
+    outline: none;
 }
 
 .rowTitle {
@@ -127,9 +185,15 @@
 
 /* END MAIN CONTENT */
 
-.daily-mode-modal .modal-content,
-.hourly-mode-modal .modal-content,
-.longTerm-mode-modal .modal-content,
+.daily-mode-modal-1 .modal-content,
+.daily-mode-modal-2 .modal-content,
+.daily-mode-modal-3 .modal-content,
+.daily-mode-modal-4 .modal-content,
+.hourly-mode-modal-0 .modal-content,
+.hourly-mode-modal-5 .modal-content,
+.hourly-mode-modal-10 .modal-content,
+.hourly-mode-modal-11 .modal-content,
+.historical-mode-modal .modal-content,
 .recommendations-mode-modal .modal-content {
     background: #1f1e30;
     color: white;
@@ -143,4 +207,31 @@
 
 .modal-body .accordion .card .card-body {
     color: #111;
+}
+
+.toggle-buttons {
+    background: transparent;
+    border: solid white;
+    border-width: 2px;
+    color: white;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 5px;
+    margin: 10px;
+}
+
+.toggle-buttons:hover {
+    background: #1f1e30;
+    border: solid white;
+    border-width: 2px;
+    color: white;
+}
+
+.toggle-buttons::selection {
+    outline: none;
+}
+
+.btn-link:hover {
+    background: transparent;
+    border: none;
 }

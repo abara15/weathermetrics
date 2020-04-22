@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Weather Metrics</title>
+
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='favicon/apple-touch-icon.png') }}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon/favicon-32x32.png') }}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon/favicon-16x16.png') }}">
+        <link rel="manifest" href="{{ url_for('static', filename='favicon/site.webmanifest') }}">
+        
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <script src="https://kit.fontawesome.com/5209143f00.js" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/common.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+        <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+    </head>
+
+    <body>
+
+        <!-- Top bar and side bar -->
+        <div class="navbar">
+            <button class="menu-icon-change" type="button" data-toggle="collapse" data-target="#collapseContent"
+            aria-expanded="false" aria-controls="collapseContent">
+                <i class="fas fa-cog fa-3x"></i>
+            </button>
+            <div id="image">
+                <a href="{{ url_for('home') }}"><img src="{{ url_for('static', filename='img/logo.png') }}" alt="logo" /></a>
+            </div>
+        </div>
+
+        <div class="sidebar collapse" id="collapseContent">
+            <div id="MyClockDisplay" class="clock" onload="showTime()"></div>
+            <hr id="sidebar-line">
+            <button><a href="{{ url_for('home') }}"><i class="fa fa-fw fa-home"></i></a></button>
+            <button data-toggle="modal" data-target=".country-mode-modal" class="dropbtn"><i class="far fa-flag"></i></button>
+            <button data-toggle="modal" data-target=".search-modal" class="dropbtn"><i class="fas fa-search-location"></i></button>
+        </div>
+
+
+        <!-- Main content -->
+        <div class="cities-container" style="color: white;">
+            {% block body %}
+            <h1>Error</h1>
+            <p>{{ e }}</p>
+            {% endblock %}
+        </div>
+
+        <!------------------ Sidebar Modals ------------------>
+        <!-- Country Modal -->
+        <div class="modal fade country-mode-modal" tabindex="-1" role="dialog" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Country</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true" style="color: white">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" style="color:white;">
+                        <p>Select a country:</p>
+                        <form method="POST">
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Argentina">Argentina</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/Mexico">Mexico</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Australia">Australia</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/Netherlands">Netherlands</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Brazil">Brazil</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/New_Zealand">New Zealand</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/China">China</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/Norway">Norway</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Colombia">Colombia</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/Philippines">Philippines</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Denmark">Denmark</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/Poland">Poland</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Egypt">Egypt</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/Portugal">Portugal</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Fiji">Fiji</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/Russia">Russia</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/France">France</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/Saudi_Arabia">Saudi Arabia</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Germany">Germany</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/Singapore">Singapore</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Greece">Greece</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/South_Africa">South Africa</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Hong_Kong">Hong Kong</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/South_Korea">South Korea</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/India">India</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/Spain">Spain</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Iran">Iran</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/Sweden">Sweden</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Iraq">Iraq</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/Switzerland">Switzerland</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Ireland">Ireland</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/Taiwan">Taiwan</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Israel">Israel</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/Turkey">Turkey</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Italy">Italy</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/United_Arab_Emirates">United Arab Emirates</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Japan">Japan</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/United_Kingdom">United Kingdom</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Malaysia">Malaysia</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/United_States">United States</a>
+                                </div>
+                            </div>
+                        </form>                     
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Modal -->
+        <div class="modal fade search-modal" tabindex="-1" role="dialog" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Search Location</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true" style="color: white">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" style="color:white;">
+                        <form method="POST" class="search-bar" action="/location">
+                            <input id="myInput" type="text" name="myCity" placeholder="City" style="width: 50%;">
+                            <input type="submit" style="cursor: pointer; background-color: transparent; color: white; border-color: white;" placeholder="SUBMIT">
+                        </form>                     
+                    </div>
+                </div>
+            </div>
+        </div> 
+
+    </body>
+</html>

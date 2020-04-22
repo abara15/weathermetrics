@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Weather Metrics</title>
+
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='favicon/apple-touch-icon.png') }}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon/favicon-32x32.png') }}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon/favicon-16x16.png') }}">
+        <link rel="manifest" href="{{ url_for('static', filename='favicon/site.webmanifest') }}">
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <script src="https://kit.fontawesome.com/5209143f00.js" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+        <script type='text/javascript' src='https://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=AmI0xl5vCHB2UMREZfkN3tj5W1o-qcExmlIRtRp1O95dnblETNsUCV6E6lAUaXbL' async defer></script>
+
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/common.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/location.css') }}">
+        <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/weatherData.js') }}"></script>
+
+    </head>
+
+    <body>
+
+        <!-- Top bar and side bar -->
+        <div class="navbar">
+            <button class="menu-icon-change" type="button" data-toggle="collapse" data-target="#collapseContent"
+            aria-expanded="false" aria-controls="collapseContent">
+                <i class="fas fa-cog fa-3x"></i>
+            </button>
+            <div id="image">
+                <a href="{{ url_for('home') }}"><img src="{{ url_for('static', filename='img/logo.png') }}" alt="logo" /></a>
+            </div>
+        </div>
+
+        <div class="sidebar collapse" id="collapseContent">
+            <div id="MyClockDisplay" class="clock" onload="showTime()"></div>
+            <hr id="sidebar-line">
+            <button><a href="{{ url_for('home') }}"><i class="fa fa-fw fa-home"></i></a></button>
+            <button data-toggle="modal" data-target=".country-mode-modal" class="dropbtn"><i class="far fa-flag"></i></button>
+            <button data-toggle="modal" data-target=".search-modal" class="dropbtn"><i class="fas fa-search-location"></i></button>
+        </div>
+
+
+        <!-- Main content -->
+        <div class="top-container">
+            <p id="locationName">{{ city_name["EnglishName"] }}, {{ city_name["Country"]["EnglishName"] }}</p>
+            <div id="top-temp">
+                <div class="weather-icon-table">
+                    <div class="row">
+                        <div class="col">
+                            <span><i class="fas {{ daily['DailyForecasts'][0]['Day']['Icon'] }} fa-5x"></i></span>
+                        </div>
+                        <div class="col">
+                            <span id="locationName" class="topTempTable">{{ current_conditions["Temperature"]["Metric"]["Value"] }}°{{ current_conditions["Temperature"]["Metric"]["Unit"] }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="top-container-table">
+                    <div class="row">
+                        <div class="col">
+                            <span><b>SUN RISE:</b><span>{{ daily["DailyForecasts"][0]["Sun"]["Rise"] }} AM</span></span>
+                        </div>
+                        <div class="col">
+                            <span><b>MOON RISE:</b><span>{{ daily["DailyForecasts"][0]["Moon"]["Rise"] }} AM</span></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <span><b>SUN SET:</b><span>{{ daily["DailyForecasts"][0]["Sun"]["Set"] }} PM</span></span>
+                        </div>
+                        <div class="col">
+                            <span><b>MOON SET:</b><span>{{ daily["DailyForecasts"][0]["Moon"]["Set"] }} PM</span></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <span><b>MOON PHASE:</b><span style="text-transform: uppercase;">{{ daily["DailyForecasts"][0]["Moon"]["Phase"] }}</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="toggle-buttons" data-toggle="modal" data-target=".historical-mode-modal">Historical Mode</button>
+            <button type="button" class="toggle-buttons" data-toggle="modal" data-target=".recommendations-mode-modal">Activity Recommendations</button>
+        </div>
+        
+        <div class="day-container">
+            <div class="row">
+                <button type="button" class="btn btn-active" style="cursor: default;">
+                    <div class="col col-active">
+                        <span class="rowTitle row-active">TODAY</span>
+                        <span class="row-active">{{ daily["DailyForecasts"][0]["Date"][:5] }}</span>
+                        <span class="row-active"><i class="fas {{ daily['DailyForecasts'][0]['Day']['Icon'] }} fa-5x"></i></span>
+                        <span class="row-active">{{ daily["DailyForecasts"][0]["Temperature"]["Maximum"]["Value"] }}°{{ daily["DailyForecasts"][0]["Temperature"]["Maximum"]["Unit"] }}</span>
+                    </div>
+                </button>
+                <button type="button" class="btn" data-toggle="modal" data-target=".daily-mode-modal-1">
+                    <div class="col col-active">
+                        <span class="rowTitle">{{ daily["DailyForecasts"][1]["Weekday"] }}</span>
+                        <span>{{ daily["DailyForecasts"][1]["Date"][:5] }}</span>
+                        <span><i class="fas {{ daily['DailyForecasts'][1]['Day']['Icon'] }} fa-5x"></i></span>
+                        <span>{{ daily["DailyForecasts"][1]["Temperature"]["Maximum"]["Value"] }}°{{ daily["DailyForecasts"][1]["Temperature"]["Maximum"]["Unit"] }}</span>
+                    </div>
+                </button>
+                <button type="button" class="btn" data-toggle="modal" data-target=".daily-mode-modal-2">
+                    <div class="col col-active">
+                        <span class="rowTitle">{{ daily["DailyForecasts"][2]["Weekday"] }}</span>
+                        <span>{{ daily["DailyForecasts"][2]["Date"][:5] }}</span>
+                        <span><i class="fas {{ daily['DailyForecasts'][2]['Day']['Icon'] }} fa-5x"></i></span>
+                        <span>{{ daily["DailyForecasts"][2]["Temperature"]["Maximum"]["Value"] }}°{{ daily["DailyForecasts"][2]["Temperature"]["Maximum"]["Unit"] }}</span>
+                    </div>
+                </button>
+                <button type="button" class="btn" data-toggle="modal" data-target=".daily-mode-modal-3">
+                    <div class="col col-active">
+                        <span class="rowTitle">{{ daily["DailyForecasts"][3]["Weekday"] }}</span>
+                        <span>{{ daily["DailyForecasts"][3]["Date"][:5] }}</span>
+                        <span><i class="fas {{ daily['DailyForecasts'][3]['Day']['Icon'] }} fa-5x"></i></span>
+                        <span>{{ daily["DailyForecasts"][3]["Temperature"]["Maximum"]["Value"] }}°{{ daily["DailyForecasts"][3]["Temperature"]["Maximum"]["Unit"] }}</span>
+                    </div>
+                </button>
+                <button type="button" class="btn" data-toggle="modal" data-target=".daily-mode-modal-4">
+                    <div class="col col-active">
+                        <span class="rowTitle">{{ daily["DailyForecasts"][4]["Weekday"] }}</span>
+                        <span>{{ daily["DailyForecasts"][4]["Date"][:5] }}</span>
+                        <span><i class="fas {{ daily['DailyForecasts'][4]['Day']['Icon'] }} fa-5x"></i></span>
+                        <span>{{ daily["DailyForecasts"][4]["Temperature"]["Maximum"]["Value"] }}°{{ daily["DailyForecasts"][4]["Temperature"]["Maximum"]["Unit"] }}</span>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <div class="hour-container">
+            <div class="row">
+                <button type="button" class="btn btn-active" style="cursor: default;">
+                    <div class="col col-active">
+                        <span class="rowTitle row-active">{{ current_conditions['LocalObservationDateTime'] }}</span>
+                        <span class="row-active"><i class="fas {{ daily['DailyForecasts'][0]['Day']['Icon'] }} fa-5x"></i></span>
+                        <span class="row-active">{{ current_conditions['Temperature']['Metric']['Value'] }}°{{ current_conditions['Temperature']['Metric']['Unit'] }}</span>
+                    </div>
+                </button>
+                <button type="button" class="btn" data-toggle="modal" data-target=".hourly-mode-modal-0" data-container="body">
+                    <div class="col">
+                        <span class="rowTitle">{{ hourly[0]["DateTime"] }}</span>
+                        <span><i class="fas {{ hourly[0]['WeatherIcon'] }} fa-5x"></i></span>
+                        <span>{{ hourly[0]["Temperature"]["Value"] }}°{{ hourly[0]["Temperature"]["Unit"] }}</span>
+                    </div>
+                </button>
+                <div class="col empty" style="width: 2px; margin: auto;">
+                    <span style="line-height: 220px;"><i class="fas fa-ellipsis-h"></i></span>
+                </div>
+                <button type="button" class="btn" data-toggle="modal" data-target=".hourly-mode-modal-5" data-container="body">
+                    <div class="col">
+                        <span class="rowTitle">{{ hourly[5]["DateTime"] }}</span>
+                        <span><i class="fas {{ hourly[5]['WeatherIcon'] }} fa-5x"></i></span>
+                        <span>{{ hourly[5]["Temperature"]["Value"] }}°{{ hourly[5]["Temperature"]["Unit"] }}</span>
+                    </div>
+                </button>
+                <div class="col empty" style="width: 2px; margin: auto;">
+                    <span style="line-height: 220px;"><i class="fas fa-ellipsis-h"></i></span>
+                </div>
+                <button type="button" class="btn" data-toggle="modal" data-target=".hourly-mode-modal-10" data-container="body">
+                    <div class="col">
+                        <span class="rowTitle">{{ hourly[10]["DateTime"] }}</span>
+                        <span><i class="fas {{ hourly[10]['WeatherIcon'] }} fa-5x"></i></span>
+                        <span>{{ hourly[10]["Temperature"]["Value"] }}°{{ hourly[10]["Temperature"]["Unit"] }}</span>
+                    </div>
+                </button>
+                <button type="button" class="btn" data-toggle="modal" data-target=".hourly-mode-modal-11" data-container="body">
+                    <div class="col">
+                        <span class="rowTitle">{{ hourly[11]["DateTime"] }}</span>
+                        <span><i class="fas {{ hourly[11]['WeatherIcon'] }} fa-5x"></i></span>
+                        <span>{{ hourly[11]["Temperature"]["Value"] }}°{{ hourly[11]["Temperature"]["Unit"] }}</span>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <div class="data-container">
+            <div class="table-content">
+                <div class="row">
+                    <div class="col">
+                        <span class="data-title">RELATIVE HUMIDITY</span>
+                        <span style="text-transform: uppercase;">{{ current_conditions['RelativeHumidity'] }}%</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">PRECIPITATION</span>
+                        <span style="text-transform: uppercase;">{{ current_conditions['PrecipitationSummary']['Precipitation']['Metric']['Value'] }} {{ current_conditions['PrecipitationSummary']['Precipitation']['Metric']['Unit'] }}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <span class="data-title">WIND</span>
+                        <span style="text-transform: uppercase;">{{ current_conditions['Wind']['Speed']['Metric']['Value'] }} {{ current_conditions['Wind']['Speed']['Metric']['Unit'] }}</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">FEELS LIKE</span>
+                        <span style="text-transform: uppercase;">{{ current_conditions['RealFeelTemperature']['Metric']['Value'] }}°{{ current_conditions['RealFeelTemperature']['Metric']['Unit'] }}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <span class="data-title">UV INDEX</span>
+                        <span style="text-transform: uppercase;">{{ current_conditions['UVIndex'] }} ({{ current_conditions['UVIndexText'] }})</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">VISIBILITY</span>
+                        <span style="text-transform: uppercase;">{{ current_conditions['Visibility']['Metric']['Value'] }} {{ current_conditions['Visibility']['Metric']['Unit'] }}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <span class="data-title">PRESSURE</span>
+                        <span style="text-transform: uppercase;">{{ current_conditions['Pressure']['Metric']['Value'] }} {{ current_conditions['Pressure']['Metric']['Unit'] }}</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">CLOUD COVER</span>
+                        <span style="text-transform: uppercase;">{{ current_conditions['CloudCover'] }}%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="data-container">
+            <div class="table-content">
+                <div class="row">
+                    <div class="col">
+                        <span class="data-title">PRECIPITATION PROBABILITY</span>
+                        <span style="text-transform: uppercase;">{{ currDay['DailyForecasts'][0]['Night']['PrecipitationProbability'] }}%</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">HOURS OF PRECIPITATION</span>
+                        <span style="text-transform: uppercase;">{{ currDay['DailyForecasts'][0]['Day']['HoursOfPrecipitation'] }} HRS</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <span class="data-title">TOTAL LIQUID</span>
+                        <span style="text-transform: uppercase;">{{ currDay['DailyForecasts'][0]['Day']['TotalLiquid']['Value'] }} {{ currDay['DailyForecasts'][0]['Day']['TotalLiquid']['Unit'] }}</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">AIR QUALITY</span>
+                        <span style="text-transform: uppercase;">{{ currDay['DailyForecasts'][0]['AirAndPollen'][0]['Value'] }} PARTS/M<sup>3</sup></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <span class="data-title">THUNDERSTORM PROBABILITY</span>
+                        <span style="text-transform: uppercase;">{{ currDay['DailyForecasts'][0]['Night']['ThunderstormProbability'] }}%</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">HOURS OF SUN</span>
+                        <span style="text-transform: uppercase;">{{ currDay['DailyForecasts'][0]['HoursOfSun'] }} HRS</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Long-Term Date Picker Input -->
+        <div class="modal fade historical-mode-modal" tabindex="-1" role="dialog" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Pick a Date</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true" style="color: white">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" style="color:white;">
+                        <p>Pick a date as far back as July 1 2008.</p>
+                        <form method="POST" class="search-bar" action="/historical/{{ city_name['EnglishName'] }}">
+                            <input id="myInput" type="text" name="myDate" placeholder="YYYY-MM-DD">
+                            <input type="submit" style="cursor: pointer;">
+                        </form>                     
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recommendations Modal -->
+        <div class="modal fade recommendations-mode-modal" tabindex="-1" role="dialog" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Activity Recommendations</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true" style="color: white">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        {% for data in indices %}
+                            <p style="color: white;">{{ data }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!------------------ Sidebar Modals ------------------>
+        <!-- Country Modal -->
+        <div class="modal fade country-mode-modal" tabindex="-1" role="dialog" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Country</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true" style="color: white">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" style="color:white;">
+                        <p>Select a country:</p>
+                        <form method="POST">
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Argentina">Argentina</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/Mexico">Mexico</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Australia">Australia</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/Netherlands">Netherlands</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Brazil">Brazil</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/New_Zealand">New Zealand</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/China">China</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/Norway">Norway</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Colombia">Colombia</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/Philippines">Philippines</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Denmark">Denmark</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/Poland">Poland</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Egypt">Egypt</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/Portugal">Portugal</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Fiji">Fiji</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/Russia">Russia</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/France">France</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/Saudi_Arabia">Saudi Arabia</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Germany">Germany</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/Singapore">Singapore</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Greece">Greece</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/South_Africa">South Africa</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Hong_Kong">Hong Kong</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/South_Korea">South Korea</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/India">India</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/Spain">Spain</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Iran">Iran</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/Sweden">Sweden</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Iraq">Iraq</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/Switzerland">Switzerland</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Ireland">Ireland</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/Taiwan">Taiwan</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Israel">Israel</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/Turkey">Turkey</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Italy">Italy</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/United_Arab_Emirates">United Arab Emirates</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Japan">Japan</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/United_Kingdom">United Kingdom</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Malaysia">Malaysia</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/United_States">United States</a>
+                                </div>
+                            </div>
+                        </form>                     
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Modal -->
+        <div class="modal fade search-modal" tabindex="-1" role="dialog" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Search Location</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true" style="color: white">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" style="color:white;">
+                        <form method="POST" class="search-bar" action="/location">
+                            <input id="myInput" type="text" name="myCity" placeholder="City">
+                            <input type="submit" style="cursor: pointer;">
+                        </form>                     
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Daily Mode Modals -->
+        <div class="modal fade daily-mode-modal-1" tabindex="-1" role="dialog" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Daily Mode</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true" style="color: white">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="top-container">
+                            <p id="locationName">{{ daily["DailyForecasts"][1]["Weekday"] }}</p>
+                            <div class="weather-icon-table">
+                                <div class="row">
+                                    <div class="col">
+                                        <span><i class="fas {{ daily['DailyForecasts'][1]['Day']['Icon'] }} fa-5x"></i></span>
+                                    </div>
+                                    <div class="col">
+                                        <span id="locationName" class="topTempTable">{{ daily["DailyForecasts"][1]["Temperature"]["Average"] }}°C</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-container">
+                            <div class="table-content">
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">MINIMUM TEMPERATURE</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][1]["Temperature"]["Minimum"]["Value"] }}°C</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">MAXIMUM TEMPERATURE</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][1]["Temperature"]["Maximum"]["Value"] }}°C</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">HOURS OF SUN</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][1]["HoursOfSun"] }} HRS</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">DESCRIPTION</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][1]["Day"]["ShortPhrase"] }}</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">AIR QUALITY</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][1]["AirAndPollen"][0]["Value"] }} PARTS/M<sup>3</sup></span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">THUNDERSTORM PROBABILITY</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][1]["Day"]["ThunderstormProbability"] }}%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-container">
+                            <div class="table-content">
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">PRECIPITATION PROBABILITY</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][1]["Day"]["PrecipitationProbability"] }}%</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">CLOUD COVER</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][1]["Day"]["CloudCover"] }}%</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">WIND SPEED</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][1]["Day"]["Wind"]["Speed"]["Value"] }} {{ daily["DailyForecasts"][1]["Day"]["Wind"]["Speed"]["Unit"] }}</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">HOURS OF PRECIPITATION</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][1]["Day"]["HoursOfPrecipitation"] }} HRS</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">TOTAL LIQUID</span>
+                                        <span style="text-transform: uppercase;">{{ daily['DailyForecasts'][1]['Day']['TotalLiquid']['Value'] }} {{ daily['DailyForecasts'][1]['Day']['TotalLiquid']['Unit'] }}</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">WIND GUST</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][1]["Day"]["WindGust"]["Speed"]["Value"] }} {{ daily["DailyForecasts"][1]["Day"]["WindGust"]["Speed"]["Unit"] }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade daily-mode-modal-2" tabindex="-1" role="dialog" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Daily Mode</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true" style="color: white">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="top-container">
+                            <p id="locationName">{{ daily["DailyForecasts"][2]["Weekday"] }}</p>
+                            <div class="weather-icon-table">
+                                <div class="row">
+                                    <div class="col">
+                                        <span><i class="fas {{ daily['DailyForecasts'][2]['Day']['Icon'] }} fa-5x"></i></span>
+                                    </div>
+                                    <div class="col">
+                                        <span id="locationName" class="topTempTable">{{ daily["DailyForecasts"][2]["Temperature"]["Average"] }}°C</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-container">
+                            <div class="table-content">
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">MINIMUM TEMPERATURE</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][2]["Temperature"]["Minimum"]["Value"] }}°C</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">MAXIMUM TEMPERATURE</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][2]["Temperature"]["Maximum"]["Value"] }}°C</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">HOURS OF SUN</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][2]["HoursOfSun"] }} HRS</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">DESCRIPTION</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][2]["Day"]["ShortPhrase"] }}</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">AIR QUALITY</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][2]["AirAndPollen"][0]["Value"] }} PARTS/M<sup>3</sup></span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">THUNDERSTORM PROBABILITY</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][2]["Day"]["ThunderstormProbability"] }}%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-container">
+                            <div class="table-content">
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">PRECIPITATION PROBABILITY</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][2]["Day"]["PrecipitationProbability"] }}%</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">CLOUD COVER</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][2]["Day"]["CloudCover"] }}%</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">WIND SPEED</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][2]["Day"]["Wind"]["Speed"]["Value"] }} {{ daily["DailyForecasts"][1]["Day"]["Wind"]["Speed"]["Unit"] }}</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">HOURS OF PRECIPITATION</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][2]["Day"]["HoursOfPrecipitation"] }} HRS</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">TOTAL LIQUID</span>
+                                        <span style="text-transform: uppercase;">{{ daily['DailyForecasts'][2]['Day']['TotalLiquid']['Value'] }} {{ daily['DailyForecasts'][2]['Day']['TotalLiquid']['Unit'] }}</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">WIND GUST</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][2]["Day"]["WindGust"]["Speed"]["Value"] }} {{ daily["DailyForecasts"][2]["Day"]["WindGust"]["Speed"]["Unit"] }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade daily-mode-modal-3" tabindex="-1" role="dialog" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Daily Mode</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true" style="color: white">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="top-container">
+                            <p id="locationName">{{ daily["DailyForecasts"][3]["Weekday"] }}</p>
+                            <div class="weather-icon-table">
+                                <div class="row">
+                                    <div class="col">
+                                        <span><i class="fas {{ daily['DailyForecasts'][3]['Day']['Icon'] }} fa-5x"></i></span>
+                                    </div>
+                                    <div class="col">
+                                        <span id="locationName" class="topTempTable">{{ daily["DailyForecasts"][3]["Temperature"]["Average"] }}°C</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-container">
+                            <div class="table-content">
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">MINIMUM TEMPERATURE</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][3]["Temperature"]["Minimum"]["Value"] }}°C</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">MAXIMUM TEMPERATURE</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][3]["Temperature"]["Maximum"]["Value"] }}°C</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">HOURS OF SUN</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][3]["HoursOfSun"] }} HRS</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">DESCRIPTION</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][3]["Day"]["ShortPhrase"] }}</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">AIR QUALITY</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][3]["AirAndPollen"][0]["Value"] }} PARTS/M<sup>3</sup></span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">THUNDERSTORM PROBABILITY</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][3]["Day"]["ThunderstormProbability"] }}%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-container">
+                            <div class="table-content">
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">PRECIPITATION PROBABILITY</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][3]["Day"]["PrecipitationProbability"] }}%</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">CLOUD COVER</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][3]["Day"]["CloudCover"] }}%</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">WIND SPEED</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][3]["Day"]["Wind"]["Speed"]["Value"] }} {{ daily["DailyForecasts"][3]["Day"]["Wind"]["Speed"]["Unit"] }}</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">HOURS OF PRECIPITATION</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][3]["Day"]["HoursOfPrecipitation"] }} HRS</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">TOTAL LIQUID</span>
+                                        <span style="text-transform: uppercase;">{{ daily['DailyForecasts'][3]['Day']['TotalLiquid']['Value'] }} {{ daily['DailyForecasts'][3]['Day']['TotalLiquid']['Unit'] }}</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">WIND GUST</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][3]["Day"]["WindGust"]["Speed"]["Value"] }} {{ daily["DailyForecasts"][3]["Day"]["WindGust"]["Speed"]["Unit"] }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade daily-mode-modal-4" tabindex="-1" role="dialog" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Daily Mode</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true" style="color: white">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="top-container">
+                            <p id="locationName">{{ daily["DailyForecasts"][4]["Weekday"] }}</p>
+                            <div class="weather-icon-table">
+                                <div class="row">
+                                    <div class="col">
+                                        <span><i class="fas {{ daily['DailyForecasts'][4]['Day']['Icon'] }} fa-5x"></i></span>
+                                    </div>
+                                    <div class="col">
+                                        <span id="locationName" class="topTempTable">{{ daily["DailyForecasts"][4]["Temperature"]["Average"] }}°C</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-container">
+                            <div class="table-content">
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">MINIMUM TEMPERATURE</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][4]["Temperature"]["Minimum"]["Value"] }}°C</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">MAXIMUM TEMPERATURE</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][4]["Temperature"]["Maximum"]["Value"] }}°C</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">HOURS OF SUN</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][4]["HoursOfSun"] }} HRS</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">DESCRIPTION</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][4]["Day"]["ShortPhrase"] }}</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">AIR QUALITY</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][4]["AirAndPollen"][0]["Value"] }} PARTS/M<sup>3</sup></span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">THUNDERSTORM PROBABILITY</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][4]["Day"]["ThunderstormProbability"] }}%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-container">
+                            <div class="table-content">
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">PRECIPITATION PROBABILITY</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][4]["Day"]["PrecipitationProbability"] }}%</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">CLOUD COVER</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][4]["Day"]["CloudCover"] }}%</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">WIND SPEED</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][4]["Day"]["Wind"]["Speed"]["Value"] }} {{ daily["DailyForecasts"][4]["Day"]["Wind"]["Speed"]["Unit"] }}</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">HOURS OF PRECIPITATION</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][4]["Day"]["HoursOfPrecipitation"] }} HRS</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">TOTAL LIQUID</span>
+                                        <span style="text-transform: uppercase;">{{ daily['DailyForecasts'][4]['Day']['TotalLiquid']['Value'] }} {{ daily['DailyForecasts'][4]['Day']['TotalLiquid']['Unit'] }}</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">WIND GUST</span>
+                                        <span style="text-transform: uppercase;">{{ daily["DailyForecasts"][4]["Day"]["WindGust"]["Speed"]["Value"] }} {{ daily["DailyForecasts"][4]["Day"]["WindGust"]["Speed"]["Unit"] }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+
+        <!-- Hourly Mode Modal -->
+        <div class="modal fade hourly-mode-modal-0" tabindex="-1" role="dialog" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Hourly Mode</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true" style="color: white">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="top-container">
+                            <p id="locationName">{{ hourly[0]["DateTime"] }}</p>
+                            <div class="weather-icon-table">
+                                <div class="row">
+                                    <div class="col">
+                                        <span><i class="fas {{ hourly[0]['WeatherIcon'] }} fa-5x"></i></span>
+                                    </div>
+                                    <div class="col">
+                                        <span id="locationName" class="topTempTable">{{ hourly[0]["Temperature"]["Value"] }}°C</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-container">
+                            <div class="table-content">
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">REAL FEEL TEMPERATURE</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[0]["RealFeelTemperature"]["Value"] }}°C</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">DEW POINT TEMPERATURE</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[0]["DewPoint"]["Value"] }}°C</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">RELATIVE HUMIDITY</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[0]["RelativeHumidity"] }}%</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">WIND DIRECTION</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[0]["Wind"]["Direction"]["Degrees"] }}° {{ hourly[0]["Wind"]["Direction"]["English"] }}</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">WIND SPEED</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[0]["Wind"]["Speed"]["Value"] }} {{ hourly[0]["Wind"]["Speed"]["Unit"] }}</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">WIND GUST</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[0]["WindGust"]["Speed"]["Value"] }} {{ hourly[0]["WindGust"]["Speed"]["Unit"] }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-container">
+                            <div class="table-content">
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">PRECIPITATION PROBABILITY</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[0]["PrecipitationProbability"] }}%</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">CLOUD COVER</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[0]["CloudCover"] }}%</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">VISIBILITY</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[0]["Visibility"]["Value"] }} {{ hourly[0]["Visibility"]["Unit"] }}</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">UV INDEX</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[0]["UVIndex"] }} ({{ hourly[0]["UVIndexText"] }})</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">TOTAL LIQUID</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[0]["TotalLiquid"]["Value"] }} {{ hourly[0]["TotalLiquid"]["Unit"] }}</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">DESCRIPTION</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[0]["IconPhrase"] }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade hourly-mode-modal-5" tabindex="-1" role="dialog" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Hourly Mode</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true" style="color: white">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="top-container">
+                            <p id="locationName">{{ hourly[5]["DateTime"] }}</p>
+                            <div class="weather-icon-table">
+                                <div class="row">
+                                    <div class="col">
+                                        <span><i class="fas {{ hourly[5]['WeatherIcon'] }} fa-5x"></i></span>
+                                    </div>
+                                    <div class="col">
+                                        <span id="locationName" class="topTempTable">{{ hourly[5]["Temperature"]["Value"] }}°C</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-container">
+                            <div class="table-content">
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">REAL FEEL TEMPERATURE</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[5]["RealFeelTemperature"]["Value"] }}°C</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">DEW POINT TEMPERATURE</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[5]["DewPoint"]["Value"] }}°C</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">RELATIVE HUMIDITY</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[5]["RelativeHumidity"] }}%</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">WIND DIRECTION</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[5]["Wind"]["Direction"]["Degrees"] }}° {{ hourly[5]["Wind"]["Direction"]["English"] }}</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">WIND SPEED</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[5]["Wind"]["Speed"]["Value"] }} {{ hourly[5]["Wind"]["Speed"]["Unit"] }}</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">WIND GUST</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[5]["WindGust"]["Speed"]["Value"] }} {{ hourly[5]["WindGust"]["Speed"]["Unit"] }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-container">
+                            <div class="table-content">
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">PRECIPITATION PROBABILITY</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[5]["PrecipitationProbability"] }}%</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">CLOUD COVER</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[5]["CloudCover"] }}%</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">VISIBILITY</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[5]["Visibility"]["Value"] }} {{ hourly[5]["Visibility"]["Unit"] }}</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">UV INDEX</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[5]["UVIndex"] }} ({{ hourly[5]["UVIndexText"] }})</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">TOTAL LIQUID</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[5]["TotalLiquid"]["Value"] }} {{ hourly[5]["TotalLiquid"]["Unit"] }}</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">DESCRIPTION</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[5]["IconPhrase"] }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade hourly-mode-modal-10" tabindex="-1" role="dialog" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Hourly Mode</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true" style="color: white">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="top-container">
+                            <p id="locationName">{{ hourly[10]["DateTime"] }}</p>
+                            <div class="weather-icon-table">
+                                <div class="row">
+                                    <div class="col">
+                                        <span><i class="fas {{ hourly[10]['WeatherIcon'] }} fa-5x"></i></span>
+                                    </div>
+                                    <div class="col">
+                                        <span id="locationName" class="topTempTable">{{ hourly[10]["Temperature"]["Value"] }}°C</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-container">
+                            <div class="table-content">
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">REAL FEEL TEMPERATURE</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[10]["RealFeelTemperature"]["Value"] }}°C</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">DEW POINT TEMPERATURE</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[10]["DewPoint"]["Value"] }}°C</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">RELATIVE HUMIDITY</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[10]["RelativeHumidity"] }}%</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">WIND DIRECTION</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[10]["Wind"]["Direction"]["Degrees"] }}° {{ hourly[10]["Wind"]["Direction"]["English"] }}</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">WIND SPEED</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[10]["Wind"]["Speed"]["Value"] }} {{ hourly[10]["Wind"]["Speed"]["Unit"] }}</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">WIND GUST</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[10]["WindGust"]["Speed"]["Value"] }} {{ hourly[10]["WindGust"]["Speed"]["Unit"] }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-container">
+                            <div class="table-content">
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">PRECIPITATION PROBABILITY</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[10]["PrecipitationProbability"] }}%</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">CLOUD COVER</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[10]["CloudCover"] }}%</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">VISIBILITY</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[10]["Visibility"]["Value"] }} {{ hourly[10]["Visibility"]["Unit"] }}</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">UV INDEX</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[10]["UVIndex"] }} ({{ hourly[10]["UVIndexText"] }})</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">TOTAL LIQUID</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[10]["TotalLiquid"]["Value"] }} {{ hourly[10]["TotalLiquid"]["Unit"] }}</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">DESCRIPTION</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[10]["IconPhrase"] }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade hourly-mode-modal-11" tabindex="-1" role="dialog" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Hourly Mode</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true" style="color: white">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="top-container">
+                            <p id="locationName">{{ hourly[11]["DateTime"] }}</p>
+                            <div class="weather-icon-table">
+                                <div class="row">
+                                    <div class="col">
+                                        <span><i class="fas {{ hourly[11]['WeatherIcon'] }} fa-5x"></i></span>
+                                    </div>
+                                    <div class="col">
+                                        <span id="locationName" class="topTempTable">{{ hourly[11]["Temperature"]["Value"] }}°C</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-container">
+                            <div class="table-content">
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">REAL FEEL TEMPERATURE</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[11]["RealFeelTemperature"]["Value"] }}°C</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">DEW POINT TEMPERATURE</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[11]["DewPoint"]["Value"] }}°C</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">RELATIVE HUMIDITY</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[11]["RelativeHumidity"] }}%</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">WIND DIRECTION</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[11]["Wind"]["Direction"]["Degrees"] }}° {{ hourly[11]["Wind"]["Direction"]["English"] }}</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">WIND SPEED</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[11]["Wind"]["Speed"]["Value"] }} {{ hourly[11]["Wind"]["Speed"]["Unit"] }}</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">WIND GUST</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[11]["WindGust"]["Speed"]["Value"] }} {{ hourly[11]["WindGust"]["Speed"]["Unit"] }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-container">
+                            <div class="table-content">
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">PRECIPITATION PROBABILITY</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[11]["PrecipitationProbability"] }}%</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">CLOUD COVER</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[11]["CloudCover"] }}%</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">VISIBILITY</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[11]["Visibility"]["Value"] }} {{ hourly[11]["Visibility"]["Unit"] }}</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">UV INDEX</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[11]["UVIndex"] }} ({{ hourly[11]["UVIndexText"] }})</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="data-title">TOTAL LIQUID</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[11]["TotalLiquid"]["Value"] }} {{ hourly[11]["TotalLiquid"]["Unit"] }}</span>
+                                    </div>
+                                    <div class="col">
+                                        <span class="data-title">DESCRIPTION</span>
+                                        <span style="text-transform: uppercase;">{{ hourly[11]["IconPhrase"] }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </body>
+</html>
