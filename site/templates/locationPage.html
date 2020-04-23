@@ -79,11 +79,6 @@
                             <span><b>MOON SET:</b><span>{{ daily["DailyForecasts"][0]["Moon"]["Set"] }} PM</span></span>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col">
-                            <span><b>MOON PHASE:</b><span style="text-transform: uppercase;">{{ daily["DailyForecasts"][0]["Moon"]["Phase"] }}</span></span>
-                        </div>
-                    </div>
                 </div>
             </div>
             <button type="button" class="toggle-buttons" data-toggle="modal" data-target=".historical-mode-modal">Historical Mode</button>
@@ -276,7 +271,7 @@
                         <form method="POST" class="search-bar" action="/historical/{{ city_name['EnglishName'] }}">
                             <input id="myInput" type="text" name="myDate" placeholder="YYYY-MM-DD">
                             <input type="submit" style="cursor: pointer;">
-                        </form>                     
+                        </form>
                     </div>
                 </div>
             </div>
@@ -294,7 +289,7 @@
                     </div>
                     <div class="modal-body">
                         {% for data in indices %}
-                            <p style="color: white;">{{ data }}</p>
+                            <p style="color: white;"><b>{{ data['Name'] }}:</b> {{ data['Text'] }}</p>
                         {% endfor %}
                     </div>
                 </div>

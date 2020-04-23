@@ -210,23 +210,26 @@ def getWeekday(oldTime):
 def getIndices(locationKey):
     response = requests.get("http://dataservice.accuweather.com/indices/v1/daily/1day/" + locationKey + "?apikey=" + API_KEY + "&details=true")
     json_data = json.loads(response.text)
-    json_data = sorted(json_data, key = lambda i: i['Value'])
+    json_data = sorted(json_data, key = lambda i: i['Value'], reverse=True)
     newList = []
+    dictionary = dict()
 
     for i in range(0, len(json_data)):
         json_data[i]['Name'] = json_data[i]['Name'].replace(" Forecast", "")
         json_data[i]['Name'] = json_data[i]['Name'].replace(" Weather", "")
         if ((json_data[i]['ID'] is 10) or (json_data[i]['ID'] is 4) or (json_data[i]['ID'] is 13) or (json_data[i] is 5) or (json_data[i] is 16) or (json_data[i]['ID'] is 3) or (json_data[i]['ID'] is 20) or (json_data[i]['ID'] is -2) or (json_data[i]['ID'] is 24) or (json_data[i]['ID'] is 28) or (json_data[i]['ID'] is 29) or (json_data[i]['ID'] is 24) or (json_data[i]['ID'] is 8) or (json_data[i]['ID'] is 1) or (json_data[i]['ID'] is 6) or (json_data[i]['ID'] is 11) or (json_data[i]['ID'] is 39) or (json_data[i]['ID'] is 7) or (json_data[i]['ID'] is 15) or (json_data[i]['ID'] is 12)):
-            newList.append(json_data[i]['Name'])
+            dictionary["Name"] = json_data[i]['Name']
+            dictionary["Text"] = json_data[i]['Text']
+            newList.append(dictionary.copy())
     return newList
 
 
-# if __name__ == "__main__":
+if __name__ == "__main__":
 #     # print(get1DayForecast("227342"))
-#     print(getIndices("274663"))
+    # print(getIndices("274663"))
 #     print(formatDateTime("2020-04-17T05:10:00+03:00", "D"))
 #     print(getWeekday("2020-04-17T05:10:00+03:00"))
-    # print(get5DayForecast("227342"))
+    print(get5DayForecast("227342"))
     # cityList = getListOfCities("Australia")
     # print(getListOfCities("Australia"))
     # print(dashboardData(cityList))

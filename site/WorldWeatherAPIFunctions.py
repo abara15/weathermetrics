@@ -49,4 +49,4 @@ def getWeatherIcon(code):
         return "fa-sun"
 
 if __name__ == "__main__":
-    print(getHistoricData("Sydney", "2009-10-26"))
+    print(getFutureData("Sydney"))

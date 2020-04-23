@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Weather Metrics</title>
+
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='favicon/apple-touch-icon.png') }}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon/favicon-32x32.png') }}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon/favicon-16x16.png') }}">
+        <link rel="manifest" href="{{ url_for('static', filename='favicon/site.webmanifest') }}">
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <script src="https://kit.fontawesome.com/5209143f00.js" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/coMMon.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/location.css') }}">
+        <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/weatherData.js') }}"></script>
+
+    </head>
+
+    <body onload="currDay();">
+
+        <!-- Top bar and side bar -->
+        <div class="navbar">
+            <button class="menu-icon-change" type="button" data-toggle="collapse" data-target="#collapseContent"
+            aria-expanded="false" aria-controls="collapseContent">
+                <i class="fas fa-cog fa-3x"></i>
+            </button>
+            <div id="image">
+                <a href="{{ url_for('home') }}"><img src="{{ url_for('static', filename='img/logo.png') }}" alt="logo" /></a>
+            </div>
+        </div>
+
+        <div class="sidebar collapse" id="collapseContent">
+            <div id="MyClockDisplay" class="clock" onload="showTime()"></div>
+            <hr id="sidebar-line">
+            <button><a href="{{ url_for('home') }}"><i class="fa fa-fw fa-home"></i></a></button>
+            <button data-toggle="modal" data-target=".country-mode-modal" class="dropbtn"><i class="far fa-flag"></i></button>
+            <button data-toggle="modal" data-target=".search-modal" class="dropbtn"><i class="fas fa-search-location"></i></button>
+        </div>
+
+
+        <!-- Main content -->
+        <div class="top-container">
+            <p id="locationName">{{ historicalData['data']['request'][0]['query'] }}</p>
+            <p id="locationDate">{{ historicalData['data']['weather'][0]['date'] }}</p>
+            <div id="top-temp">
+                <div class="weather-icon-table">
+                    <div class="row">
+                        <div class="col">
+                            <span><i class="fas {{ historicalData['data']['weather'][0]['hourly'][4]['weatherCode'] }} fa-5x"></i></span>
+                        </div>
+                        <div class="col">
+                            <span id="locationName" class="topTempTable">{{ historicalData['data']['weather'][0]['avgtempC'] }}°C</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="top-container-table">
+                    <div class="row">
+                        <div class="col">
+                            <span><b>MIN TEMP:</b><span>{{ historicalData['data']['weather'][0]['mintempC'] }}°C</span></span>
+                        </div>
+                        <div class="col">
+                            <span><b>MAX TEMP:</b><span>{{ historicalData['data']['weather'][0]['maxtempC'] }}°C</span></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <span><b>SUN RISE:</b><span>{{ historicalData['data']['weather'][0]['astronomy'][0]['sunrise'] }}</span></span>
+                        </div>
+                        <div class="col">
+                            <span><b>MOON RISE:</b><span>{{ historicalData['data']['weather'][0]['astronomy'][0]['moonrise'] }}</span></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <span><b>SUN SET:</b><span>{{ historicalData['data']['weather'][0]['astronomy'][0]['sunset'] }}</span></span>
+                        </div>
+                        <div class="col">
+                            <span><b>MOON SET:</b><span>{{ historicalData['data']['weather'][0]['astronomy'][0]['moonset'] }}</span></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <span style="text-transform: uppercase;"><b>MOON PHASE:</b> {{ historicalData['data']['weather'][0]['astronomy'][0]['moon_phase'] }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="data-container">
+            <div class="table-content" style="padding: 25px;">
+                <div class="row">
+                    <div class="col">
+                        <span class="data-title" style="color: rgb(168, 168, 168); text-transform: uppercase;">Time</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title" style="color: rgb(168, 168, 168); text-transform: uppercase;">00:00</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title" style="color: rgb(168, 168, 168); text-transform: uppercase;">03:00</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title" style="color: rgb(168, 168, 168); text-transform: uppercase;">06:00</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title" style="color: rgb(168, 168, 168); text-transform: uppercase;">09:00</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title" style="color: rgb(168, 168, 168); text-transform: uppercase;">12:00</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title" style="color: rgb(168, 168, 168); text-transform: uppercase;">15:00</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title" style="color: rgb(168, 168, 168); text-transform: uppercase;">18:00</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title" style="color: rgb(168, 168, 168); text-transform: uppercase;">21:00</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <span class="data-title" style="color: rgb(168, 168, 168); text-transform: uppercase;">Temp.</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][0]['tempC'] }}°C</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][1]['tempC'] }}°C</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][2]['tempC'] }}°C</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][3]['tempC'] }}°C</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][4]['tempC'] }}°C</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][5]['tempC'] }}°C</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][6]['tempC'] }}°C</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][7]['tempC'] }}°C</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <span class="data-title" style="color: rgb(168, 168, 168); text-transform: uppercase;">Feel Temp.</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][0]['FeelsLikeC'] }}°C</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][1]['FeelsLikeC'] }}°C</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][2]['FeelsLikeC'] }}°C</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][3]['FeelsLikeC'] }}°C</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][4]['FeelsLikeC'] }}°C</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][5]['FeelsLikeC'] }}°C</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][6]['FeelsLikeC'] }}°C</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][7]['FeelsLikeC'] }}°C</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <span class="data-title" style="color: rgb(168, 168, 168); text-transform: uppercase;">Heat Index</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][0]['HeatIndexC'] }}°C</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][1]['HeatIndexC'] }}°C</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][2]['HeatIndexC'] }}°C</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][3]['HeatIndexC'] }}°C</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][4]['HeatIndexC'] }}°C</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][5]['HeatIndexC'] }}°C</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][6]['HeatIndexC'] }}°C</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][7]['HeatIndexC'] }}°C</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <span class="data-title" style="color: rgb(168, 168, 168); text-transform: uppercase;">Dew Point</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][0]['DewPointC'] }}°C</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][1]['DewPointC'] }}°C</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][2]['DewPointC'] }}°C</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][3]['DewPointC'] }}°C</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][4]['DewPointC'] }}°C</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][5]['DewPointC'] }}°C</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][6]['DewPointC'] }}°C</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][7]['DewPointC'] }}°C</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <span class="data-title" style="color: rgb(168, 168, 168); text-transform: uppercase;">Wind Chill</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][0]['WindChillC'] }}°C</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][1]['WindChillC'] }}°C</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][2]['WindChillC'] }}°C</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][3]['WindChillC'] }}°C</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][4]['WindChillC'] }}°C</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][5]['WindChillC'] }}°C</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][6]['WindChillC'] }}°C</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][7]['WindChillC'] }}°C</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <span class="data-title" style="color: rgb(168, 168, 168); text-transform: uppercase;">Wind Speed</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][0]['windspeedKmph'] }} KM/H</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][1]['windspeedKmph'] }} KM/H</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][2]['windspeedKmph'] }} KM/H</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][3]['windspeedKmph'] }} KM/H</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][4]['windspeedKmph'] }} KM/H</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][5]['windspeedKmph'] }} KM/H</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][6]['windspeedKmph'] }} KM/H</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][7]['windspeedKmph'] }} KM/H</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <span class="data-title" style="color: rgb(168, 168, 168); text-transform: uppercase;">Wind Gust</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][0]['WindGustKmph'] }} KM/H</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][1]['WindGustKmph'] }} KM/H</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][2]['WindGustKmph'] }} KM/H</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][3]['WindGustKmph'] }} KM/H</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][4]['WindGustKmph'] }} KM/H</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][5]['WindGustKmph'] }} KM/H</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][6]['WindGustKmph'] }} KM/H</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][7]['WindGustKmph'] }} KM/H</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <span class="data-title" style="color: rgb(168, 168, 168); text-transform: uppercase;">Wind Direction</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][0]['winddirDegree'] }}° {{ historicalData['data']['weather'][0]['hourly'][0]['winddir16Point'] }}</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][1]['winddirDegree'] }}° {{ historicalData['data']['weather'][0]['hourly'][1]['winddir16Point'] }}</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][2]['winddirDegree'] }}° {{ historicalData['data']['weather'][0]['hourly'][2]['winddir16Point'] }}</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][3]['winddirDegree'] }}° {{ historicalData['data']['weather'][0]['hourly'][3]['winddir16Point'] }}</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][4]['winddirDegree'] }}° {{ historicalData['data']['weather'][0]['hourly'][4]['winddir16Point'] }}</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][5]['winddirDegree'] }}° {{ historicalData['data']['weather'][0]['hourly'][5]['winddir16Point'] }}</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][6]['winddirDegree'] }}° {{ historicalData['data']['weather'][0]['hourly'][6]['winddir16Point'] }}</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][7]['winddirDegree'] }}° {{ historicalData['data']['weather'][0]['hourly'][7]['winddir16Point'] }}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <span class="data-title" style="color: rgb(168, 168, 168); text-transform: uppercase;">Precipitation</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][0]['precipMM'] }} MM</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][1]['precipMM'] }} MM</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][2]['precipMM'] }} MM</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][3]['precipMM'] }} MM</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][4]['precipMM'] }} MM</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][5]['precipMM'] }} MM</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][6]['precipMM'] }} MM</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][7]['precipMM'] }} MM</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <span class="data-title" style="color: rgb(168, 168, 168); text-transform: uppercase;">Humidity</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][0]['humidity'] }}%</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][1]['humidity'] }}%</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][2]['humidity'] }}%</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][3]['humidity'] }}%</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][4]['humidity'] }}%</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][5]['humidity'] }}%</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][6]['humidity'] }}%</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][7]['humidity'] }}%</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <span class="data-title" style="color: rgb(168, 168, 168); text-transform: uppercase;">Visibility</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][0]['visibility'] }} KM</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][1]['visibility'] }} KM</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][2]['visibility'] }} KM</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][3]['visibility'] }} KM</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][4]['visibility'] }} KM</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][5]['visibility'] }} KM</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][6]['visibility'] }} KM</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][7]['visibility'] }} KM</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <span class="data-title" style="color: rgb(168, 168, 168); text-transform: uppercase;">Pressure</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][0]['pressure'] }} MB</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][1]['pressure'] }} MB</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][2]['pressure'] }} MB</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][3]['pressure'] }} MB</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][4]['pressure'] }} MB</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][5]['pressure'] }} MB</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][6]['pressure'] }} MB</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][7]['pressure'] }} MB</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <span class="data-title" style="color: rgb(168, 168, 168); text-transform: uppercase;">Cloud Cover</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][0]['cloudcover'] }}%</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][1]['cloudcover'] }}%</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][2]['cloudcover'] }}%</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][3]['cloudcover'] }}%</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][4]['cloudcover'] }}%</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][5]['cloudcover'] }}%</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][6]['cloudcover'] }}%</span>
+                    </div>
+                    <div class="col">
+                        <span class="data-title">{{ historicalData['data']['weather'][0]['hourly'][7]['cloudcover'] }}%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!------------------ Sidebar Modals ------------------>
+        <!-- Country Modal -->
+        <div class="modal fade country-mode-modal" tabindex="-1" role="dialog" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Country</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true" style="color: white">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" style="color:white;">
+                        <p>Select a country:</p>
+                        <form method="POST">
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Argentina">Argentina</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/Mexico">Mexico</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Australia">Australia</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/Netherlands">Netherlands</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Brazil">Brazil</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/New_Zealand">New Zealand</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/China">China</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/Norway">Norway</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Colo MBia">Colo MBia</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/Philippines">Philippines</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Denmark">Denmark</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/Poland">Poland</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Egypt">Egypt</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/Portugal">Portugal</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Fiji">Fiji</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/Russia">Russia</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/France">France</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/Saudi_Arabia">Saudi Arabia</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Germany">Germany</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/Singapore">Singapore</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Greece">Greece</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/South_Africa">South Africa</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Hong_Kong">Hong Kong</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/South_Korea">South Korea</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/India">India</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/Spain">Spain</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Iran">Iran</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/Sweden">Sweden</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Iraq">Iraq</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/Switzerland">Switzerland</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Ireland">Ireland</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/Taiwan">Taiwan</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Israel">Israel</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/Turkey">Turkey</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Italy">Italy</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/United_Arab_Emirates">United Arab Emirates</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Japan">Japan</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/United_Kingdom">United Kingdom</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/country/Malaysia">Malaysia</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/country/United_States">United States</a>
+                                </div>
+                            </div>
+                        </form>                     
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Modal -->
+        <div class="modal fade search-modal" tabindex="-1" role="dialog" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Search Location</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true" style="color: white">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" style="color:white;">
+                        <form method="POST" class="search-bar" action="/location">
+                            <input id="myInput" type="text" name="myCity" placeholder="City">
+                            <input type="submit" style="cursor: pointer;">
+                        </form>                     
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </body>
+</html>
